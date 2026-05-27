@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qamaressence | Catálogo Oficial de Perfumes</title>
+    <style>
+        :root {
+            --bg-color: #faf8f5;
+            --text-color: #222222;
+            --accent-gold: #c5a880;
+            --accent-muted: #8e8e93;
+            --card-bg: #ffffff;
+            --border-light: #e5e5ea;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-light);
+            padding: 40px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        header h1 {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 2.5rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        header p {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .search-filter-section {
+            margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        .search-bar-container {
+            width: 100%;
+            max-width: 600px;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 15px 25px;
+            font-size: 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .search-bar:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 4px 12px rgba(197, 168, 128, 0.15);
+        }
+        .filters-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        .filter-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-light);
+            padding: 8px 18px;
+            font-size: 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--text-color);
+            color: #ffffff;
+        }
+        .results-count {
+            font-size: 0.9rem;
+            color: var(--accent-muted);
+            margin-bottom: 20px;
+        }
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
+        }
+        .product-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .image-container {
+            width: 100%;
+            height: 250px;
+            background-color: #fcfcfc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .product-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            padding: 15px;
+        }
+        .product-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .product-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            min-height: 44px;
+        }
+        .product-size {
+            font-size: 0.85rem;
+            color: var(--accent-muted);
+            margin-bottom: 15px;
+        }
+        .product-meta {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px dashed var(--border-light);
+        }
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .order-btn {
+            background-color: transparent;
+            border: 1px solid var(--text-color);
+            color: var(--text-color);
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            text-transform: uppercase;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .order-btn:hover {
+            background-color: var(--text-color);
+            color: #ffffff;
+        }
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: var(--accent-muted);
+            display: none;
+        }
+        .instagram-floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: #ffffff;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            text-decoration: none;
+            z-index: 999;
+        }
+        .instagram-floating-btn svg { width: 24px; height: 24px; fill: currentColor; }
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8rem; }
+            .catalog-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+            .image-container { height: 170px; }
+            .product-name { font-size: 0.95rem; min-height: 38px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Qamaressence</h1>
+        <p>Catálogo Digital de Alta Perfumería</p>
+    </header>
+
+    <div class="container">
+        <div class="search-filter-section">
+            <div class="search-bar-container">
+                <input type="text" id="searchInput" class="search-bar" placeholder="Buscar perfume por nombre...">
+            </div>
+            <div class="filters-container" id="filtersContainer">
+                <button class="filter-btn active" onclick="filterCategory('TODOS', this)">Todos</button>
+                <button class="filter-btn" onclick="filterCategory('Arabiyat Sugar', this)">Arabiyat Sugar</button><button class="filter-btn" onclick="filterCategory('General', this)">General</button><button class="filter-btn" onclick="filterCategory('MAN AFNAN', this)">MAN AFNAN</button><button class="filter-btn" onclick="filterCategory('MAN LATTAFA', this)">MAN LATTAFA</button><button class="filter-btn" onclick="filterCategory('MEN ARMAF', this)">MEN ARMAF</button><button class="filter-btn" onclick="filterCategory('MEN FRENCH AVENUE', this)">MEN FRENCH AVENUE</button><button class="filter-btn" onclick="filterCategory('Perfumes 50 ml', this)">Perfumes 50 ml</button><button class="filter-btn" onclick="filterCategory('WOMAN ASDAAF', this)">WOMAN ASDAAF</button><button class="filter-btn" onclick="filterCategory('WOMAN LATTAFA', this)">WOMAN LATTAFA</button>
+            </div>
+        </div>
+
+        <div class="results-count" id="resultsCount">Cargando catálogo...</div>
+        <main class="catalog-grid" id="catalogGrid"></main>
+        <div class="no-results" id="noResults">No se han encontrado perfumes.</div>
+    </div>
+
+    <a href="https://www.instagram.com/qmaressence/" target="_blank" class="instagram-floating-btn">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+
+    <script>
+        const productos = [
+  {
+    "nombre": "9PM",
+    "categoria": "MAN AFNAN",
+    "tamano": "100ml",
+    "precio": "35.00€",
+    "precio_num": 35.0,
+    "imagen": "9pm.jpg"
+  },
+  {
+    "nombre": "9PM Elixir",
+    "categoria": "MAN AFNAN",
+    "tamano": "100ml",
+    "precio": "41.50€",
+    "precio_num": 41.5,
+    "imagen": "9pm-elexir.jpg"
+  },
+  {
+    "nombre": "9PM Night out",
+    "categoria": "MAN AFNAN",
+    "tamano": "100ml",
+    "precio": "50.00€",
+    "precio_num": 50.0,
+    "imagen": "9pm-night-out.jpg"
+  },
+  {
+    "nombre": "9PM Rebel",
+    "categoria": "MAN AFNAN",
+    "tamano": "100ml",
+    "precio": "35.00€",
+    "precio_num": 35.0,
+    "imagen": "9pm-rebel.jpg"
+  },
+  {
+    "nombre": "Aether",
+    "categoria": "MEN FRENCH AVENUE",
+    "tamano": "100ml",
+    "precio": "38.50€",
+    "precio_num": 38.5,
+    "imagen": "aether.jpg"
+  },
+  {
+    "nombre": "Afnan 9 AM Dive Unisex EDP 100ml",
+    "categoria": "General",
+    "tamano": "100ml",
+    "precio": "35.00€",
+    "precio_num": 35.0,
+    "imagen": "afnan-9-am-dive-unisex-edp-100ml.jpg"
+  },
+  {
+    "nombre": "Ameer al oud",
+    "categoria": "MAN LATTAFA",
+    "tamano": "100ml",
+    "precio": "25.00€",
+    "precio_num": 25.0,
+    "imagen": "ameer al oud.jpg"
+  },
+  {
+    "nombre": "Ameraat rojo",
+    "categoria": "WOMAN ASDAAF",
+    "tamano": "100ml",
+    "precio": "21.95€",
+    "precio_num": 21.95,
+    "imagen": "ameraat rojo"
+  },
+  {
+    "nombre": "Ameraat rojo",
+    "categoria": "Perfumes 50 ml",
+    "tamano": "100ml",
+    "precio": "7.99€",
+    "precio_num": 7.99,
+    "imagen": "ameraat-rojo-1"
+  },
+  {
+    "nombre": "Ameraat Rosa",
+    "categoria": "WOMAN ASDAAF",
+    "tamano": "100ml",
+    "precio": "21.95€",
+    "precio_num": 21.95,
+    "imagen": "ameraat rosa"
+  },
+  {
+    "nombre": "Ana Abiyedh Scarlet",
+    "categoria": "WOMAN LATTAFA",
+    "tamano": "60ml",
+    "precio": "20.95€",
+    "precio_num": 20.95,
+    "imagen": "ana abiyedh scarlet"
+  },
+  {
+    "nombre": "Arabiyat Sugar French Vanilla Latte",
+    "categoria": "Arabiyat Sugar",
+    "tamano": "100ml",
+    "precio": "30.00€",
+    "precio_num": 30.0,
+    "imagen": "arabiyat-sugar-french-vanilla-latte"
+  },
+  {
+    "nombre": "Armaf Club De Nuit Maleka EDP 105ml",
+    "categoria": "General",
+    "tamano": "100ml",
+    "precio": "35.00€",
+    "precio_num": 35.0,
+    "imagen": "armaf-club-de-nuit-maleka-edp-105ml"
+  },
+  {
+    "nombre": "Armaf Club De Nuit Urban Elixir Men EDP 105ml",
+    "categoria": "MEN ARMAF",
+    "tamano": "100ml",
+    "precio": "35.00€",
+    "precio_num": 35.0,
+    "imagen": "armaf-club-de-nuit-urban-elixir-men-edp-105ml"
+  },
+  {
+    "nombre": "Armaf Odyssey Mandarin Sky Elixir Unisex EDP 100ml",
+    "categoria": "General",
+    "tamano": "100ml",
+    "precio": "35.00€",
+    "precio_num": 35.0,
+    "imagen": "armaf-odyssey-mandarin-sky-elixir-unisex-edp-100ml"
+  },
+  {
+    "nombre": "Armaf Yum Yum Women EDP 100ml",
+    "categoria": "General",
+    "tamano": "100ml",
+    "precio": "35.00€",
+    "precio_num": 35.0,
+    "imagen": "armaf-yum-yum-women-edp-100ml"
+  },
+  {
+    "nombre": "Asad bourbon",
+    "categoria": "MAN LATTAFA",
+    "tamano": "100ml",
+    "precio": "23.95€",
+    "precio_num": 23.95,
+    "imagen": "asad-bourbon"
+  },
+  {
+    "nombre": "ASAD NEGRO",
+    "categoria": "MAN LATTAFA",
+    "tamano": "100ML",
+    "precio": "23.95€",
+    "precio_num": 23.95,
+    "imagen": "royal-blend"
+  },
+  {
+    "nombre": "Atlas 55ml",
+    "categoria": "MAN LATTAFA",
+    "tamano": "55ml",
+    "precio": "38.95€",
+    "precio_num": 38.95,
+    "imagen": "atlas-55ml"
+  },
+  {
+    "nombre": "Bade Noble Blush",
+    "categoria": "WOMAN LATTAFA",
+    "tamano": "100ml",
+    "precio": "25.99€",
+    "precio_num": 25.99,
+    "imagen": "bade noble blush"
+  },
+  {
+    "nombre": "Bade rouge",
+    "categoria": "WOMAN LATTAFA",
+    "tamano": "100ml",
+    "precio": "25.99€",
+    "precio_num": 25.99,
+    "imagen": "bade-rouge"
+  },
+  {
+    "nombre": "Bade'e Al Oud Amethyst",
+    "categoria": "WOMAN LATTAFA",
+    "tamano": "100ml",
+    "precio": "25.99€",
+    "precio_num": 25.99,
+    "imagen": "bade'e-al-oud-amethyst"
+  },
+  {
+    "nombre": "Bade'e Al Oud Honor & Glory",
+    "categoria": "WOMAN LATTAFA",
+    "tamano": "100ml",
+    "precio": "25.99€",
+    "precio_num": 25.99,
+    "imagen": "bade'e-al-oud-honor-&-glory"
+  },
+  {
+    "nombre": "Bade'e Al Oud Oud For Glory",
+    "categoria": "MAN LATTAFA",
+    "tamano": "100ml",
+    "precio": "25.99€",
+    "precio_num": 25.99,
+    "imagen": "bade'e-al-oud-oud-for-glory"
+  },
+  {
+    "nombre": "Barakkat aqua stellar",
+    "categoria": "MEN FRENCH AVENUE",
+    "tamano": "100ml",
+    "precio": "25.00€",
+    "precio_num": 25.0,
+    "imagen": "barakkat-aqua-stellar"
+  },
+  {
+    "nombre": "Barakkat rouge 540 extrait",
+    "categoria": "MEN FRENCH AVENUE",
+    "tamano": "100ml",
+    "precio": "25.00€",
+    "precio_num": 25.0,
+    "imagen": "barakkat-rouge-540-extrait"
+  }
+];
+
+        let categoriaActual = 'TODOS';
+        let busquedaActual = '';
+        const placeholderSVG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23c5a880" width="60" height="60"><path d="M12 2a3 3 0 0 0-3 3v1H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3V5a3 3 0 0 0-3-3zm-1 4V5a1 1 0 0 1 2 0v1h-2zm7 3v2h-2V9h2zm-8 0v2H8V9h2z"/></svg>';
+
+        const grid = document.getElementById('catalogGrid');
+        const searchInput = document.getElementById('searchInput');
+        const resultsCount = document.getElementById('resultsCount');
+        const noResults = document.getElementById('noResults');
+
+        function renderProducts() {
+            grid.innerHTML = '';
+            const filtrados = productos.filter(p => {
+                const cumpleCat = (categoriaActual === 'TODOS' || p.categoria === categoriaActual);
+                const cumpleBusq = p.nombre.toLowerCase().includes(busquedaActual.toLowerCase());
+                return cumpleCat && cumpleBusq;
+            });
+            resultsCount.textContent = 'Mostrando ' + filtrados.length + ' de ' + productos.length + ' perfumes';
+            if (filtrados.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                filtrados.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.innerHTML = `
+                        <div class="image-container">
+                            <img class="product-image" src="${p.imagen}" alt="${p.nombre}" onerror="this.onerror=null; this.src='${placeholderSVG}';">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-category">${p.categoria}</span>
+                            <h3 class="product-name">${p.nombre}</h3>
+                            <p class="product-size">${p.tamano}</p>
+                            <div class="product-meta">
+                                <span class="product-price">${p.precio}</span>
+                                <a href="https://www.instagram.com/qmaressence/" target="_blank" class="order-btn">Pedir</a>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            busquedaActual = e.target.value;
+            renderProducts();
+        });
+
+        function filterCategory(categoria, elemento) {
+            categoriaActual = categoria;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            elemento.classList.add('active');
+            renderProducts();
+        }
+
+        renderProducts();
+    </script>
+</body>
+</html>
